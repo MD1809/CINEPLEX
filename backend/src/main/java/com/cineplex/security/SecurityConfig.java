@@ -66,12 +66,13 @@ public class SecurityConfig {
                     "/swagger-ui/**",
                     "/swagger-ui.html"
                 ).permitAll()
-                // Public browsing for movies, showtimes, concessions
+                // Public browsing for movies, showtimes, concessions, rooms
                 .requestMatchers(HttpMethod.GET,
                     "/api/v1/movies/**",
                     "/api/v1/showtimes/**",
                     "/api/v1/snacks/**",
-                    "/api/v1/genres/**"
+                    "/api/v1/genres/**",
+                    "/api/v1/rooms/**"
                 ).permitAll()
                 // Payment callbacks & IPN
                 .requestMatchers(
