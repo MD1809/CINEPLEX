@@ -43,6 +43,7 @@ public class DataInitializer implements CommandLineRunner {
         initRoomsAndSeats(seatTypes);
         initSnacks();
         initVouchers();
+        initMovies();
 
         log.info("Database seeding completed successfully!");
     }
@@ -284,5 +285,89 @@ public class DataInitializer implements CommandLineRunner {
 
         voucherRepository.saveAll(vouchers);
         log.info("Seeded 2 promotional vouchers.");
+    }
+
+    private void initMovies() {
+        if (movieRepository.count() > 0) return;
+
+        Genre action = genreRepository.findBySlug("hanh-dong").orElse(null);
+        Genre sciFi = genreRepository.findBySlug("khoa-hoc-vien-tuong").orElse(null);
+        Genre animation = genreRepository.findBySlug("hoat-hinh").orElse(null);
+        Genre horror = genreRepository.findBySlug("kinh-di").orElse(null);
+        Genre romance = genreRepository.findBySlug("tinh-cam").orElse(null);
+
+        List<Movie> movies = List.of(
+                Movie.builder()
+                        .title("Dune: Hành Tinh Cát - Phần 2")
+                        .originalTitle("Dune: Part Two")
+                        .slug("dune-hanh-tinh-cat-phan-2")
+                        .director("Denis Villeneuve")
+                        .cast("Timothée Chalamet, Zendaya, Rebecca Ferguson")
+                        .synopsis("Paul Atreides hợp lực cùng Chani và người Fremen trên hành trình báo thù những kẻ đã hủy hoại gia đình mình.")
+                        .durationMinutes(166)
+                        .releaseDate(LocalDate.now().minusDays(10))
+                        .endDate(LocalDate.now().plusMonths(1))
+                        .ageRating(AgeRating.T16)
+                        .posterUrl("https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80")
+                        .bannerUrl("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&auto=format&fit=crop&q=80")
+                        .trailerUrl("https://www.youtube.com/watch?v=Way9Dexny3w")
+                        .status(MovieStatus.NOW_SHOWING)
+                        .genres(action != null && sciFi != null ? Set.of(action, sciFi) : Set.of())
+                        .build(),
+                Movie.builder()
+                        .title("Mai")
+                        .originalTitle("Mai")
+                        .slug("mai-tran-thanh")
+                        .director("Trấn Thành")
+                        .cast("Phương Anh Đào, Tuấn Trần, Trấn Thành")
+                        .synopsis("Câu chuyện tình yêu đầy trắc trở giữa Mai - người phụ nữ massage chịu nhiều tổn thương và Dương - chàng trai trẻ đào hoa.")
+                        .durationMinutes(131)
+                        .releaseDate(LocalDate.now().minusDays(15))
+                        .endDate(LocalDate.now().plusWeeks(3))
+                        .ageRating(AgeRating.T18)
+                        .posterUrl("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80")
+                        .bannerUrl("https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1600&auto=format&fit=crop&q=80")
+                        .trailerUrl("https://www.youtube.com/watch?v=kY3Su_h7u8Y")
+                        .status(MovieStatus.NOW_SHOWING)
+                        .genres(romance != null ? Set.of(romance) : Set.of())
+                        .build(),
+                Movie.builder()
+                        .title("Kung Fu Panda 4")
+                        .originalTitle("Kung Fu Panda 4")
+                        .slug("kung-fu-panda-4")
+                        .director("Mike Mitchell")
+                        .cast("Jack Black, Awkwafina, Viola Davis")
+                        .synopsis("Po được chọn trở thành Thủ lĩnh Tinh thần của Thung lũng Bình Yên và phải tìm kiếm một Thần Long Đại Hiệp mới.")
+                        .durationMinutes(94)
+                        .releaseDate(LocalDate.now().minusDays(5))
+                        .endDate(LocalDate.now().plusMonths(2))
+                        .ageRating(AgeRating.P)
+                        .posterUrl("https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&auto=format&fit=crop&q=80")
+                        .bannerUrl("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&auto=format&fit=crop&q=80")
+                        .trailerUrl("https://www.youtube.com/watch?v=_inKs4eeHiI")
+                        .status(MovieStatus.NOW_SHOWING)
+                        .genres(animation != null && action != null ? Set.of(animation, action) : Set.of())
+                        .build(),
+                Movie.builder()
+                        .title("Deadpool & Wolverine")
+                        .originalTitle("Deadpool & Wolverine")
+                        .slug("deadpool-and-wolverine")
+                        .director("Shawn Levy")
+                        .cast("Ryan Reynolds, Hugh Jackman, Emma Corrin")
+                        .synopsis("Deadpool gia nhập Vũ trụ Điện ảnh Marvel cùng Wolverine trong chuyến hành trình hỗn loạn xuyên đa vũ trụ.")
+                        .durationMinutes(128)
+                        .releaseDate(LocalDate.now().plusDays(14))
+                        .endDate(LocalDate.now().plusMonths(3))
+                        .ageRating(AgeRating.T18)
+                        .posterUrl("https://images.unsplash.com/photo-1563089145-599997674d42?w=600&auto=format&fit=crop&q=80")
+                        .bannerUrl("https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1600&auto=format&fit=crop&q=80")
+                        .trailerUrl("https://www.youtube.com/watch?v=73_1biulkYk")
+                        .status(MovieStatus.COMING_SOON)
+                        .genres(action != null && sciFi != null ? Set.of(action, sciFi) : Set.of())
+                        .build()
+        );
+
+        movieRepository.saveAll(movies);
+        log.info("Seeded 4 sample movies (Now Showing & Coming Soon).");
     }
 }
