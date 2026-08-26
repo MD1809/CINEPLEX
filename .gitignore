@@ -1,0 +1,184 @@
+# =============================================================================
+# CINEPLEX - GITIGNORE CONFIGURATION
+# Tech Stack: Java (Spring Boot 3.x), Maven/Gradle, React/Vite, Node.js, MySQL, Redis
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Java & Spring Boot (Build Outputs & Bytecode)
+# -----------------------------------------------------------------------------
+*.class
+*.war
+*.ear
+*.nar
+*.rar
+*.zip
+*.tar.gz
+*.rar
+
+# Maven build artifacts
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle build artifacts (if applicable)
+.gradle/
+build/
+!src/**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# -----------------------------------------------------------------------------
+# 2. Frontend / Node.js (React, Vite, Package Managers)
+# -----------------------------------------------------------------------------
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Build outputs
+dist/
+dist-ssr/
+out/
+.next/
+coverage/
+
+# Vite & Bundle caches
+.vite/
+.eslintcache
+.stylelintcache
+.parcel-cache/
+.turbo/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# -----------------------------------------------------------------------------
+# 3. Environment Variables & Sensitive Credentials (Security)
+# -----------------------------------------------------------------------------
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+*.env
+
+# Local Spring Boot configurations containing secrets
+application-local.properties
+application-local.yml
+application-local.yaml
+application-secret.properties
+application-secret.yml
+application-secret.yaml
+
+# Keys, Certificates & Keystores
+*.pem
+*.key
+*.cer
+*.crt
+*.jks
+*.keystore
+*.p12
+
+# -----------------------------------------------------------------------------
+# 4. IDEs & Code Editors
+# -----------------------------------------------------------------------------
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.built-jar.properties
+
+# General Editor Temporary Files
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# -----------------------------------------------------------------------------
+# 5. Databases & In-Memory Stores (Local Dumps & Runtime Data)
+# -----------------------------------------------------------------------------
+# Redis dump file
+dump.rdb
+*.rdb
+
+# Local database dumps and backups (keep seed SQL files if placed under src/main/resources)
+*.sql.gz
+*.db
+*.sqlite
+*.sqlite3
+
+# -----------------------------------------------------------------------------
+# 6. Operating System Artifacts
+# -----------------------------------------------------------------------------
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+.fuse_hidden*
+# -----------------------------------------------------------------------------
+# 7. AI Agents & Documentation / Planning Files
+# -----------------------------------------------------------------------------
+.agents/
+docs/
+task_plan.md
+progress.md
+findings.md
