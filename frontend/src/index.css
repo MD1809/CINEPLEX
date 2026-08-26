@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base Colors in HSL for Shadcn */
+    --background: 228 12% 8%;       /* #121317 */
+    --foreground: 210 40% 98%;      /* #F8FAFC */
+
+    --card: 225 9% 13%;             /* #1E1F23 */
+    --card-foreground: 210 40% 98%;
+
+    --popover: 225 9% 13%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 357 91% 47%;          /* #E50914 Cinema Red */
+    --primary-foreground: 210 40% 98%;
+    --primary-red-glow: rgba(229, 9, 20, 0.4);
+
+    --secondary: 225 6% 17%;        /* #292A2E Elevated */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 8% 22%;
+    --muted-foreground: 215 16% 65%;
+
+    --accent: 46 80% 60%;           /* #E9C349 VIP Gold */
+    --accent-foreground: 228 12% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 8% 20%;
+    --input: 220 8% 20%;
+    --ring: 357 91% 47%;
+
+    --radius: 0.75rem;
+
+    /* Custom Cinema Noir Hex Tokens */
+    --cinema-bg: #121317;
+    --cinema-surface: #1e1f23;
+    --cinema-elevated: #292a2e;
+    --cinema-red: #e50914;
+    --cinema-gold: #e9c349;
+    --cinema-pink: #ec4899;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-[#121317] text-foreground font-sans antialiased selection:bg-[#e50914] selection:text-white min-h-screen;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(229, 9, 20, 0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(233, 195, 73, 0.05) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121317;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2b30;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e50914;
+}
+
+/* Cinematic Utilities */
+.glass-panel {
+  background: rgba(30, 31, 35, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-header {
+  background: rgba(18, 19, 23, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.text-gradient-red {
+  background: linear-gradient(135deg, #ff4b55 0%, #e50914 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #fff275 0%, #e9c349 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cinema-glow {
+  box-shadow: 0 0 20px -2px rgba(229, 9, 20, 0.45);
+}
+
+.curved-screen-glow {
+  box-shadow: 0 15px 35px -5px rgba(229, 9, 20, 0.35);
+}
