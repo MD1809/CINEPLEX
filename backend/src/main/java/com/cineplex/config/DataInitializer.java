@@ -44,6 +44,7 @@ public class DataInitializer implements CommandLineRunner {
         initSnacks();
         initVouchers();
         initMovies();
+        initShowtimes();
 
         log.info("Database seeding completed successfully!");
     }
@@ -369,5 +370,117 @@ public class DataInitializer implements CommandLineRunner {
 
         movieRepository.saveAll(movies);
         log.info("Seeded 4 sample movies (Now Showing & Coming Soon).");
+    }
+
+    private void initShowtimes() {
+        if (showtimeRepository.count() > 0) return;
+
+        Movie dune = movieRepository.findBySlug("dune-hanh-tinh-cat-phan-2").orElse(null);
+        Movie mai = movieRepository.findBySlug("mai-tran-thanh").orElse(null);
+        Movie panda = movieRepository.findBySlug("kung-fu-panda-4").orElse(null);
+
+        Room room1 = roomRepository.findByName("Phòng Chiếu 1 (IMAX Laser)").orElse(null);
+        Room room2 = roomRepository.findByName("Phòng Chiếu 2 (Standard 2D)").orElse(null);
+
+        if (dune == null || mai == null || panda == null || room1 == null || room2 == null) {
+            return;
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        LocalDate dayAfterTomorrow = today.plusDays(2);
+
+        List<Showtime> showtimes = List.of(
+                // Today Room 1 (IMAX)
+                Showtime.builder()
+                        .movie(dune)
+                        .room(room1)
+                        .startTime(today.atTime(10, 0))
+                        .endTime(today.atTime(10, 0).plusMinutes(dune.getDurationMinutes()))
+                        .basePrice(new BigDecimal("110000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+                Showtime.builder()
+                        .movie(panda)
+                        .room(room1)
+                        .startTime(today.atTime(14, 0))
+                        .endTime(today.atTime(14, 0).plusMinutes(panda.getDurationMinutes()))
+                        .basePrice(new BigDecimal("95000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+                Showtime.builder()
+                        .movie(dune)
+                        .room(room1)
+                        .startTime(today.atTime(19, 0))
+                        .endTime(today.atTime(19, 0).plusMinutes(dune.getDurationMinutes()))
+                        .basePrice(new BigDecimal("120000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+
+                // Today Room 2 (Standard)
+                Showtime.builder()
+                        .movie(mai)
+                        .room(room2)
+                        .startTime(today.atTime(13, 30))
+                        .endTime(today.atTime(13, 30).plusMinutes(mai.getDurationMinutes()))
+                        .basePrice(new BigDecimal("85000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+                Showtime.builder()
+                        .movie(mai)
+                        .room(room2)
+                        .startTime(today.atTime(18, 0))
+                        .endTime(today.atTime(18, 0).plusMinutes(mai.getDurationMinutes()))
+                        .basePrice(new BigDecimal("90000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+
+                // Tomorrow Room 1
+                Showtime.builder()
+                        .movie(dune)
+                        .room(room1)
+                        .startTime(tomorrow.atTime(10, 30))
+                        .endTime(tomorrow.atTime(10, 30).plusMinutes(dune.getDurationMinutes()))
+                        .basePrice(new BigDecimal("110000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+                Showtime.builder()
+                        .movie(panda)
+                        .room(room1)
+                        .startTime(tomorrow.atTime(15, 0))
+                        .endTime(tomorrow.atTime(15, 0).plusMinutes(panda.getDurationMinutes()))
+                        .basePrice(new BigDecimal("95000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+                Showtime.builder()
+                        .movie(dune)
+                        .room(room1)
+                        .startTime(tomorrow.atTime(19, 30))
+                        .endTime(tomorrow.atTime(19, 30).plusMinutes(dune.getDurationMinutes()))
+                        .basePrice(new BigDecimal("120000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+
+                // Day After Tomorrow Room 1 & 2
+                Showtime.builder()
+                        .movie(panda)
+                        .room(room1)
+                        .startTime(dayAfterTomorrow.atTime(10, 0))
+                        .endTime(dayAfterTomorrow.atTime(10, 0).plusMinutes(panda.getDurationMinutes()))
+                        .basePrice(new BigDecimal("95000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build(),
+                Showtime.builder()
+                        .movie(mai)
+                        .room(room2)
+                        .startTime(dayAfterTomorrow.atTime(14, 0))
+                        .endTime(dayAfterTomorrow.atTime(14, 0).plusMinutes(mai.getDurationMinutes()))
+                        .basePrice(new BigDecimal("85000.00"))
+                        .status(ShowtimeStatus.OPENING)
+                        .build()
+        );
+
+        showtimeRepository.saveAll(showtimes);
+        log.info("Seeded 10 showtimes across 3 days.");
     }
 }

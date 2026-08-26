@@ -12,15 +12,20 @@ import java.util.List;
 
 @Repository
 public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
+    List<Showtime> findByMovieId(Long movieId);
+    List<Showtime> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
     List<Showtime> findByMovieIdAndStartTimeBetween(Long movieId, LocalDateTime start, LocalDateTime end);
+    List<Showtime> findByRoomIdAndStartTimeBetween(Long roomId, LocalDateTime start, LocalDateTime end);
     List<Showtime> findByStatus(ShowtimeStatus status);
 
-    @Query("SELECT s FROM Showtime s WHERE s.room.id = :roomId AND s.id <> :excludeId " +
-           "AND ((s.startTime < :endTime AND s.endTime > :startTime))")
+    @Query("SELECT s FROM Showtime s WHERE s.room.id = :roomId " +
+           "AND (:excludeId IS NULL OR s.id <> :excludeId) " +
+           "AND s.status <> com.cineplex.entity.enums.ShowtimeStatus.CANCELLED " +
+           "AND (s.startTime < :occupiedUntil AND :startTime < s.endTime)")
     List<Showtime> findConflictingShowtimes(
         @Param("roomId") Long roomId,
         @Param("startTime") LocalDateTime startTime,
-        @Param("endTime") LocalDateTime endTime,
+        @Param("occupiedUntil") LocalDateTime occupiedUntil,
         @Param("excludeId") Long excludeId
     );
 }
