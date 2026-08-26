@@ -1,0 +1,58 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: cineplex-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/cineplex_db?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: root
+    password: 18092005
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    open-in-view: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3000ms
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cineplex.cinema.vn@gmail.com
+    password: ${MAIL_PASSWORD:dummy_password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# Security & JWT Configuration
+app:
+  jwt:
+    secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    expiration-ms: 86400000 # 1 day
+    refresh-expiration-ms: 604800000 # 7 days
+  vnpay:
+    tmn-code: ${VNP_TMN_CODE:DEMOVNPAY}
+    hash-secret: ${VNP_HASH_SECRET:DEMOHASHSECRETKEY}
+    url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    return-url: http://localhost:5173/payment/vnpay-return
+
+# OpenAPI Documentation
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
