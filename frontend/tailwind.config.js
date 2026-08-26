@@ -57,6 +57,14 @@ export default {
           gold: "#e9c349",
           pink: "#ec4899",
         },
+        cine: {
+          dark: "#121317",
+          surface: "#1e1f23",
+          "surface-elevated": "#292a2e",
+          red: "#e50914",
+          gold: "#e9c349",
+          pink: "#ec4899",
+        },
         seat: {
           available: "#475569",
           selected: "#22c55e",

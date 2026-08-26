@@ -36,8 +36,9 @@ class AuthControllerTest {
     @Test
     @DisplayName("POST /api/v1/auth/register - Register new customer successfully")
     void testRegisterSuccess() throws Exception {
+        String uniqueEmail = "test.customer." + System.currentTimeMillis() + "@gmail.com";
         RegisterRequest request = RegisterRequest.builder()
-                .email("test.customer@gmail.com")
+                .email(uniqueEmail)
                 .password("Customer@123")
                 .fullName("Trần Thị Khách Hàng")
                 .phoneNumber("0987654321")
@@ -51,7 +52,7 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.statusCode", is(201)))
                 .andExpect(jsonPath("$.data.accessToken", notNullValue()))
                 .andExpect(jsonPath("$.data.refreshToken", notNullValue()))
-                .andExpect(jsonPath("$.data.user.email", is("test.customer@gmail.com")))
+                .andExpect(jsonPath("$.data.user.email", is(uniqueEmail)))
                 .andExpect(jsonPath("$.data.user.role", is("CUSTOMER")));
     }
 

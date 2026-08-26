@@ -1,191 +1,176 @@
-import { useState } from 'react';
-import { 
-  Film, 
-  Sparkles, 
-  Armchair, 
-  Ticket, 
-  Tv, 
-  ShieldCheck, 
-  CheckCircle2,
-  Play,
-  Calendar,
-  Clock,
-  MapPin
-} from 'lucide-react';
-import { Toaster, toast } from 'sonner';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { Navbar } from './components/layout/Navbar';
+import { Footer } from './components/layout/Footer';
+import { LoginPage } from './pages/auth/LoginPage';
+import { RegisterPage } from './pages/auth/RegisterPage';
+import { AuthRequiredDialog } from './components/auth/AuthRequiredDialog';
+import { ProtectedRoute } from './components/guards/ProtectedRoute';
+import { useAuthStore } from './stores/authStore';
+import { Film, Ticket, Sparkles, Clock, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Toaster } from 'sonner';
 
-export default function App() {
-  const [selectedSeat, setSelectedSeat] = useState<string | null>('F7');
-
-  const demoSeats = [
-    { code: 'F5', type: 'REGULAR', price: 90000, color: 'bg-slate-600 text-slate-200' },
-    { code: 'F6', type: 'REGULAR', price: 90000, color: 'bg-slate-600 text-slate-200' },
-    { code: 'F7', type: 'VIP', price: 110000, color: 'bg-[#e9c349] text-slate-950 font-bold shadow-[0_0_12px_rgba(233,195,73,0.5)]' },
-    { code: 'F8', type: 'VIP', price: 110000, color: 'bg-[#e9c349]/40 text-amber-200' },
-    { code: 'H1-H2', type: 'SWEETBOX', price: 240000, color: 'bg-[#ec4899] text-white shadow-[0_0_12px_rgba(236,72,153,0.4)]' },
-  ];
+// Placeholder Home Component displaying system capabilities & Auth test
+const HomePage: React.FC = () => {
+  const { user, isAuthenticated, openAuthModal } = useAuthStore();
 
   return (
-    <div className="min-h-screen bg-[#121317] text-slate-100 flex flex-col selection:bg-[#e50914] selection:text-white">
-      <Toaster position="top-right" theme="dark" richColors />
-      
-      {/* Header */}
-      <header className="sticky top-0 z-50 glass-header px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e50914] to-[#990000] flex items-center justify-center cinema-glow">
-            <Film className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <span className="font-display font-extrabold text-2xl tracking-wider text-gradient-red">
-              CINEPLEX
-            </span>
-            <span className="text-[10px] block font-semibold text-slate-400 tracking-widest uppercase">
-              Cinema & Lounge
-            </span>
-          </div>
-        </div>
+    <div className="min-h-screen bg-cine-dark text-slate-100 flex flex-col justify-between">
+      <Navbar />
 
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
-          <a href="#movies" className="text-white hover:text-[#e50914] transition-colors">Phim Đang Chiếu</a>
-          <a href="#schedule" className="hover:text-[#e50914] transition-colors">Lịch Chiếu</a>
-          <a href="#concessions" className="hover:text-[#e50914] transition-colors">Bắp Nước</a>
-          <a href="#vouchers" className="hover:text-[#e50914] transition-colors">Khuyến Mãi</a>
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => toast.success("Hệ thống frontend đã sẵn sàng kết nối API Backend Spring Boot!")}
-            className="px-4 py-2 text-xs font-semibold rounded-lg bg-[#1e1f23] hover:bg-[#292a2e] border border-white/10 transition-all text-slate-200"
-          >
-            Đăng nhập
-          </button>
-          <button 
-            onClick={() => toast.info("Tính năng đặt vé nhanh đang được kết nối...")}
-            className="px-4 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-[#e50914] to-[#ff2b36] hover:brightness-110 text-white cinema-glow transition-all flex items-center gap-1.5"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            Đặt Vé Ngay
-          </button>
-        </div>
-      </header>
-
-      {/* Main Content Showcase */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-12 space-y-12">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Hero Section */}
-        <section className="relative rounded-3xl overflow-hidden glass-panel p-8 md:p-12 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e50914]/15 border border-[#e50914]/30 text-[#ff4b55] text-xs font-semibold">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-cine-surface via-cine-surface-elevated to-cine-dark border border-white/10 p-8 sm:p-12 mb-12 shadow-2xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-cine-red/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-cine-gold/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 max-w-2xl">
+            <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-cine-red/10 border border-cine-red/30 text-cine-red text-xs font-bold uppercase tracking-wider mb-4">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Giao Diện Độc Bản Cinematic Noir</span>
+              <span>Phase 2: Authentication & RBAC Active</span>
             </div>
-            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
-              Trải Nghiệm Điện Ảnh Đỉnh Cao Tại <span className="text-gradient-red">CINEPLEX</span>
+
+            <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-4">
+              Hệ Thống Đặt Vé Xem Phim <span className="bg-gradient-to-r from-cine-red to-red-400 bg-clip-text text-transparent">CINEPLEX</span>
             </h1>
-            <p className="text-slate-400 text-sm md:text-base leading-relaxed">
-              Khung kiến trúc hiện đại chuẩn Production: React 19 + Tailwind CSS + Shadcn UI, kết nối Spring Boot 3.4.3 (Java 21 LTS), MySQL 9.6 & Redis Lock 5 phút.
+
+            <p className="text-base text-slate-300 mb-8 leading-relaxed">
+              Trải nghiệm điện ảnh đỉnh cao với hệ thống giữ ghế tức thì 5 phút trên Redis, thanh toán bảo mật VNPAY QR và quản trị rạp chiếu phim chuẩn quốc tế.
             </p>
-            <div className="flex flex-wrap gap-4 pt-2">
-              <button 
-                onClick={() => toast.success("Đang phát trailer mẫu...")}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#e50914] to-[#c7000b] text-white text-sm font-semibold flex items-center gap-2 cinema-glow hover:scale-105 transition-all"
+
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Button triggering Auth Gate dialog if guest */}
+              <button
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    openAuthModal('/booking/demo');
+                  }
+                }}
+                className="flex items-center space-x-2 py-3.5 px-6 rounded-xl bg-cine-red hover:bg-red-700 text-white font-bold shadow-lg shadow-cine-red/30 transition-all active:scale-95"
               >
-                <Play className="w-4 h-4 fill-white" /> Xem Trailer
+                <Ticket className="w-5 h-5" />
+                <span>Thử Nghiệm Đặt Ghế (Khách Vãng Lai)</span>
+                <ChevronRight className="w-4 h-4" />
               </button>
-              <button 
-                onClick={() => toast.info("Xem lịch chiếu hôm nay")}
-                className="px-5 py-2.5 rounded-xl bg-[#292a2e] hover:bg-[#34353b] text-slate-200 text-sm font-semibold border border-white/10 transition-all flex items-center gap-2"
-              >
-                <Calendar className="w-4 h-4 text-[#e9c349]" /> Suất Chiếu Hôm Nay
-              </button>
-            </div>
-          </div>
 
-          {/* Quick Metrics Badge */}
-          <div className="w-full md:w-80 space-y-3">
-            <div className="p-4 rounded-2xl bg-[#1e1f23]/90 border border-white/10 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-emerald-400" /> Backend Status</span>
-                <span className="text-emerald-400 font-semibold">Ready (Port 8080)</span>
-              </div>
-              <div className="text-sm font-medium text-slate-200">Spring Boot 3.4.3 (Java 21 LTS)</div>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-[#1e1f23]/90 border border-white/10 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Database Status</span>
-                <span className="text-amber-400 font-semibold">Connected</span>
-              </div>
-              <div className="text-sm font-medium text-slate-200">MySQL 9.6.0 (cineplex_db)</div>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-[#1e1f23]/90 border border-white/10 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#ff4b55]" /> Seat Lock Engine</span>
-                <span className="text-[#ff4b55] font-semibold">TTL 300s (5:00)</span>
-              </div>
-              <div className="text-sm font-medium text-slate-200">Redis Distributed Lock</div>
-            </div>
-          </div>
-        </section>
-
-        {/* Mini Seat Selector Demo */}
-        <section className="glass-panel p-8 rounded-3xl space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <Armchair className="w-5 h-5 text-[#e9c349]" /> Minh Họa Ma Trận Ghế & Màu Sắc Phân Hạng
-              </h2>
-              <p className="text-xs text-slate-400">Thử click ghế để kiểm tra tương tác trạng thái.</p>
-            </div>
-            <div className="flex items-center gap-4 text-xs">
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-slate-600"></span> Thường</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#e9c349]"></span> VIP (Gold)</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#ec4899]"></span> Sweetbox (Đôi)</span>
-            </div>
-          </div>
-
-          {/* Curved Screen Simulation */}
-          <div className="flex flex-col items-center space-y-2 py-4">
-            <div className="w-3/4 h-2 bg-gradient-to-r from-transparent via-[#e50914] to-transparent rounded-full curved-screen-glow"></div>
-            <span className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase flex items-center gap-1.5">
-              <Tv className="w-3.5 h-3.5 text-[#e50914]" /> Màn Hình Chiếu (Screen)
-            </span>
-          </div>
-
-          {/* Seat Grid */}
-          <div className="flex justify-center gap-4 py-4">
-            {demoSeats.map((seat) => {
-              const isSelected = selectedSeat === seat.code;
-              return (
-                <button
-                  key={seat.code}
-                  onClick={() => {
-                    setSelectedSeat(seat.code);
-                    toast.success(`Đã chọn ghế ${seat.code} (${seat.type}) - ${seat.price.toLocaleString('vi-VN')} đ`);
-                  }}
-                  className={`w-14 h-12 rounded-xl flex flex-col items-center justify-center text-xs transition-all cursor-pointer ${
-                    isSelected 
-                      ? 'bg-emerald-500 text-slate-950 font-bold scale-110 shadow-[0_0_15px_rgba(34,197,94,0.6)] ring-2 ring-white' 
-                      : seat.color
-                  }`}
+              {!isAuthenticated ? (
+                <Link
+                  to="/login"
+                  className="py-3.5 px-6 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold border border-white/10 transition-colors"
                 >
-                  <Armchair className="w-4 h-4 mb-0.5" />
-                  <span>{seat.code}</span>
-                </button>
-              );
-            })}
+                  Đăng Nhập Ngay
+                </Link>
+              ) : (
+                <div className="py-3.5 px-6 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-semibold flex items-center space-x-2">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Đã xác thực: {user?.fullName} ({user?.role})</span>
+                </div>
+              )}
+            </div>
           </div>
-        </section>
+        </div>
+
+        {/* Feature Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-6 rounded-2xl bg-cine-surface border border-white/5 shadow-lg hover:border-cine-red/30 transition-all group">
+            <div className="w-12 h-12 rounded-xl bg-cine-red/10 text-cine-red flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Clock className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">Khóa Ghế Redis 5 Phút</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Cơ chế TTL 300s ngăn chặn xung đột chọn ghế đồng thời giữa nhiều khách hàng và quầy vé.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-cine-surface border border-white/5 shadow-lg hover:border-cine-gold/30 transition-all group">
+            <div className="w-12 h-12 rounded-xl bg-cine-gold/10 text-cine-gold flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Film className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">Ma Trận Ghế & Phòng Chiếu</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Sơ đồ ghế thông minh phân loại Ghế Thường, VIP Hoàng Gia và Ghế đôi Sweetbox tình nhân.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-cine-surface border border-white/5 shadow-lg hover:border-cine-pink/30 transition-all group">
+            <div className="w-12 h-12 rounded-xl bg-cine-pink/10 text-cine-pink flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">Phân Quyền RBAC 3 Lớp</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Tách biệt hoàn toàn luồng Khách hàng, Thu ngân POS quầy và Bảng điều khiển Quản trị viên.
+            </p>
+          </div>
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-white/5 py-8 text-center text-xs text-slate-500">
-        <p>CINEPLEX Fullstack Cinema Management & Booking System &copy; 2026</p>
-        <p className="mt-1 flex items-center justify-center gap-2">
-          <MapPin className="w-3.5 h-3.5 text-[#e50914]" /> Hệ thống rạp chiếu phim chất lượng cao
-          <Ticket className="w-3.5 h-3.5 text-[#e9c349]" /> Hỗ trợ đặt vé Online & Quầy POS
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
+};
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <Toaster position="top-right" richColors theme="dark" />
+      <AuthRequiredDialog />
+
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        {/* Customer Protected Routes */}
+        <Route
+          path="/my-tickets"
+          element={
+            <ProtectedRoute allowedRoles={['CUSTOMER', 'STAFF', 'ADMIN']}>
+              <div className="min-h-screen bg-cine-dark text-white p-8">
+                <Navbar />
+                <div className="max-w-4xl mx-auto py-12">
+                  <h1 className="text-2xl font-bold">Vé của tôi & Lịch sử đặt vé</h1>
+                  <p className="text-slate-400 mt-2">Tính năng đang trong lộ trình Giai đoạn 4 & 5.</p>
+                </div>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Staff Protected Routes */}
+        <Route
+          path="/staff/pos"
+          element={
+            <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+              <div className="min-h-screen bg-cine-dark text-white p-8">
+                <Navbar />
+                <div className="max-w-4xl mx-auto py-12">
+                  <h1 className="text-2xl font-bold">Quầy Thu Ngân POS Nhân Viên</h1>
+                  <p className="text-slate-400 mt-2">Tính năng đang trong lộ trình Giai đoạn 6.</p>
+                </div>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Protected Routes */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <div className="min-h-screen bg-cine-dark text-white p-8">
+                <Navbar />
+                <div className="max-w-4xl mx-auto py-12">
+                  <h1 className="text-2xl font-bold">Bảng Điều Khiển Quản Trị Viên (Admin CMS)</h1>
+                  <p className="text-slate-400 mt-2">Tính năng đang trong lộ trình Giai đoạn 3 & 6.</p>
+                </div>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
+
+export default App;
