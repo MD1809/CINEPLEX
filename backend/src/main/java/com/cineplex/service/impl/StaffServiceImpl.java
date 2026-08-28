@@ -3,6 +3,7 @@ package com.cineplex.service.impl;
 import com.cineplex.dto.booking.BookingSnackDetailDto;
 import com.cineplex.dto.booking.SnackOrderItemDto;
 import com.cineplex.dto.booking.TicketDetailDto;
+import com.cineplex.dto.common.PageResponse;
 import com.cineplex.dto.showtime.ShowtimeResponse;
 import com.cineplex.dto.staff.*;
 import com.cineplex.dto.voucher.ApplyVoucherRequest;
@@ -14,8 +15,13 @@ import com.cineplex.repository.*;
 import com.cineplex.service.QrCodeService;
 import com.cineplex.service.StaffService;
 import com.cineplex.service.VoucherService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -225,11 +231,20 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional(readOnly = true)
     public ShiftReportResponse getShiftReport(Long staffId) {
-        User staff = getStaffUser(staffId);
-        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
-        LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+        return getShiftReportCustom(staffId, LocalDate.now(), LocalDate.now());
+    }
 
-        List<Booking> staffBookings = bookingRepository.findByStaffIdAndCreatedAtBetween(staffId, startOfDay, endOfDay);
+    @Override
+    @Transactional(readOnly = true)
+    public ShiftReportResponse getShiftReportCustom(Long staffId, LocalDate startDate, LocalDate endDate) {
+        User staff = getStaffUser(staffId);
+        LocalDate start = startDate != null ? startDate : LocalDate.now();
+        LocalDate end = endDate != null ? endDate : LocalDate.now();
+
+        LocalDateTime startDateTime = start.atStartOfDay();
+        LocalDateTime endDateTime = end.atTime(LocalTime.MAX);
+
+        List<Booking> staffBookings = bookingRepository.findByStaffIdAndCreatedAtBetween(staffId, startDateTime, endDateTime);
 
         long totalOrders = 0;
         long totalTicketsSold = 0;
@@ -264,6 +279,99 @@ public class StaffServiceImpl implements StaffService {
                 .totalRevenue(totalRevenue)
                 .generatedAt(LocalDateTime.now())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<StaffOrderSummaryDto> getStaffOrdersHistory(
+            Long staffId,
+            LocalDate startDate,
+            LocalDate endDate,
+            PaymentMethod paymentMethod,
+            String search,
+            int page,
+            int size
+    ) {
+        Specification<Booking> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (staffId != null) {
+                predicates.add(cb.equal(root.get("staff").get("id"), staffId));
+            }
+
+            if (startDate != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("createdAt"), startDate.atStartOfDay()));
+            }
+
+            if (endDate != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("createdAt"), endDate.atTime(LocalTime.MAX)));
+            }
+
+            if (paymentMethod != null) {
+                predicates.add(cb.equal(root.get("payment").get("paymentMethod"), paymentMethod));
+            }
+
+            if (search != null && !search.trim().isEmpty()) {
+                String term = "%" + search.trim().toLowerCase() + "%";
+                Predicate codeMatch = cb.like(cb.lower(root.get("bookingCode")), term);
+                Predicate movieMatch = cb.like(cb.lower(root.get("showtime").get("movie").get("title")), term);
+                predicates.add(cb.or(codeMatch, movieMatch));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Booking> bookingPage = bookingRepository.findAll(spec, pageRequest);
+
+        List<StaffOrderSummaryDto> content = bookingPage.getContent().stream()
+                .map(b -> {
+                    List<String> seatCodes = b.getTickets().stream()
+                            .map(t -> t.getSeat().getSeatCode())
+                            .collect(Collectors.toList());
+                    int snacksCount = b.getBookingSnacks().stream()
+                            .mapToInt(BookingSnack::getQuantity)
+                            .sum();
+
+                    return StaffOrderSummaryDto.builder()
+                            .id(b.getId())
+                            .bookingCode(b.getBookingCode())
+                            .movieTitle(b.getShowtime().getMovie().getTitle())
+                            .moviePosterUrl(b.getShowtime().getMovie().getPosterUrl())
+                            .roomName(b.getShowtime().getRoom().getName())
+                            .screenType(b.getShowtime().getRoom().getScreenType().name())
+                            .showtimeStart(b.getShowtime().getStartTime())
+                            .ticketsCount(b.getTickets().size())
+                            .seatCodes(seatCodes)
+                            .snacksCount(snacksCount)
+                            .totalAmount(b.getTotalAmount())
+                            .discountAmount(b.getDiscountAmount())
+                            .finalAmount(b.getFinalAmount())
+                            .paymentMethod(b.getPayment() != null ? b.getPayment().getPaymentMethod() : PaymentMethod.CASH)
+                            .status(b.getStatus())
+                            .createdAt(b.getCreatedAt())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return PageResponse.<StaffOrderSummaryDto>builder()
+                .content(content)
+                .pageNumber(bookingPage.getNumber())
+                .pageSize(bookingPage.getSize())
+                .totalElements(bookingPage.getTotalElements())
+                .totalPages(bookingPage.getTotalPages())
+                .last(bookingPage.isLast())
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PosCheckoutResponse getBookingReceipt(String bookingCode) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn hàng mã: " + bookingCode));
+        Payment payment = booking.getPayment();
+        PaymentMethod pm = payment != null ? payment.getPaymentMethod() : PaymentMethod.CASH;
+        return buildPosCheckoutResponse(booking, booking.getFinalAmount(), BigDecimal.ZERO, pm);
     }
 
     @Override

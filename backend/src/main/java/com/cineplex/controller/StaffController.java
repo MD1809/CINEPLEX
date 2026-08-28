@@ -3,6 +3,7 @@ package com.cineplex.controller;
 import com.cineplex.dto.common.ApiResponse;
 import com.cineplex.dto.showtime.ShowtimeResponse;
 import com.cineplex.dto.staff.*;
+import com.cineplex.entity.enums.PaymentMethod;
 import com.cineplex.security.UserPrincipal;
 import com.cineplex.service.StaffService;
 import jakarta.validation.Valid;
@@ -85,14 +86,54 @@ public class StaffController {
 
     @GetMapping("/shift-report")
     public ResponseEntity<ApiResponse<ShiftReportResponse>> getShiftReport(
-            @AuthenticationPrincipal UserPrincipal currentUser
+            @AuthenticationPrincipal UserPrincipal currentUser,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate startDate,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate endDate
     ) {
         Long staffId = currentUser != null ? currentUser.getId() : null;
-        ShiftReportResponse response = staffService.getShiftReport(staffId);
+        ShiftReportResponse response = (startDate != null || endDate != null)
+                ? staffService.getShiftReportCustom(staffId, startDate, endDate)
+                : staffService.getShiftReport(staffId);
+
         return ResponseEntity.ok(ApiResponse.<ShiftReportResponse>builder()
                 .success(true)
                 .statusCode(HttpStatus.OK.value())
                 .message("Lấy báo cáo doanh thu ca trực thành công")
+                .data(response)
+                .build());
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<ApiResponse<com.cineplex.dto.common.PageResponse<StaffOrderSummaryDto>>> getStaffOrdersHistory(
+            @AuthenticationPrincipal UserPrincipal currentUser,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate startDate,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate endDate,
+            @RequestParam(required = false) PaymentMethod paymentMethod,
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size
+    ) {
+        Long staffId = currentUser != null ? currentUser.getId() : null;
+        com.cineplex.dto.common.PageResponse<StaffOrderSummaryDto> response =
+                staffService.getStaffOrdersHistory(staffId, startDate, endDate, paymentMethod, search, page, size);
+
+        return ResponseEntity.ok(ApiResponse.<com.cineplex.dto.common.PageResponse<StaffOrderSummaryDto>>builder()
+                .success(true)
+                .statusCode(HttpStatus.OK.value())
+                .message("Lấy lịch sử đơn hàng ca trực thành công")
+                .data(response)
+                .build());
+    }
+
+    @GetMapping("/orders/{bookingCode}/receipt")
+    public ResponseEntity<ApiResponse<PosCheckoutResponse>> getBookingReceipt(
+            @PathVariable String bookingCode
+    ) {
+        PosCheckoutResponse response = staffService.getBookingReceipt(bookingCode);
+        return ResponseEntity.ok(ApiResponse.<PosCheckoutResponse>builder()
+                .success(true)
+                .statusCode(HttpStatus.OK.value())
+                .message("Lấy thông tin hóa đơn vé thành công")
                 .data(response)
                 .build());
     }
