@@ -13,12 +13,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class VnpaySignatureTest {
 
-    private final String secretKey = "AXUQCJTYOWWWXMKTRZGFPRMHYGBLWJGF";
+    private final String secretKey = "ODJLXOCEWMFIEJXHJNMZUVFFVRDDXLOT";
 
     @Test
     @DisplayName("Verify HMAC-SHA512 produces consistent 128-character hex string")
     void testHmacSha512Generation() {
-        String data = "vnp_Amount=10000000&vnp_Command=pay&vnp_TmnCode=2QXUI4J4";
+        String data = "vnp_Amount=10000000&vnp_Command=pay&vnp_TmnCode=1SNJ89L8";
         String hash = VnpayConfig.hmacSHA512(secretKey, data);
 
         assertThat(hash).isNotNull();

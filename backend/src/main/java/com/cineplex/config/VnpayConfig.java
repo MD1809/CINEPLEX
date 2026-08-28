@@ -62,21 +62,15 @@ public class VnpayConfig {
     public static String hashAllFields(Map<String, String> fields, String hashSecret) {
         List<String> fieldNames = new ArrayList<>(fields.keySet());
         Collections.sort(fieldNames);
-        StringBuilder sb = new StringBuilder();
-        Iterator<String> itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = itr.next();
+        List<String> hashDataList = new ArrayList<>();
+        for (String fieldName : fieldNames) {
             String fieldValue = fields.get(fieldName);
             if (fieldValue != null && !fieldValue.trim().isEmpty()) {
-                sb.append(fieldName);
-                sb.append("=");
-                sb.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-                if (itr.hasNext()) {
-                    sb.append("&");
-                }
+                hashDataList.add(fieldName + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
             }
         }
-        return hmacSHA512(hashSecret, sb.toString());
+        String hashData = String.join("&", hashDataList);
+        return hmacSHA512(hashSecret, hashData);
     }
 
     /**
@@ -85,21 +79,14 @@ public class VnpayConfig {
     public static String buildQueryUrl(Map<String, String> fields) {
         List<String> fieldNames = new ArrayList<>(fields.keySet());
         Collections.sort(fieldNames);
-        StringBuilder sb = new StringBuilder();
-        Iterator<String> itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = itr.next();
+        List<String> queryList = new ArrayList<>();
+        for (String fieldName : fieldNames) {
             String fieldValue = fields.get(fieldName);
             if (fieldValue != null && !fieldValue.trim().isEmpty()) {
-                sb.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII));
-                sb.append("=");
-                sb.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-                if (itr.hasNext()) {
-                    sb.append("&");
-                }
+                queryList.add(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII) + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
             }
         }
-        return sb.toString();
+        return String.join("&", queryList);
     }
 
     /**
