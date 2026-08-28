@@ -43,8 +43,8 @@ app:
     expiration-ms: 86400000 # 1 day
     refresh-expiration-ms: 604800000 # 7 days
   vnpay:
-    tmn-code: ${VNP_TMN_CODE:DEMOVNPAY}
-    hash-secret: ${VNP_HASH_SECRET:DEMOHASHSECRETKEY}
+    tmn-code: ${VNP_TMN_CODE:2QXUI4J4}
+    hash-secret: ${VNP_HASH_SECRET:AXUQCJTYOWWWXMKTRZGFPRMHYGBLWJGF}
     url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
     return-url: http://localhost:5173/payment/vnpay-return
 

@@ -5,8 +5,12 @@ import com.cineplex.dto.booking.HoldSeatsRequest;
 import com.cineplex.dto.booking.HoldSeatsResponse;
 import com.cineplex.dto.booking.ReleaseSeatsRequest;
 import com.cineplex.dto.booking.SeatMapResponse;
+import com.cineplex.dto.booking.OnlineCheckoutRequest;
+import com.cineplex.dto.booking.OnlineCheckoutResponse;
 import com.cineplex.security.UserPrincipal;
+import com.cineplex.service.PaymentService;
 import com.cineplex.service.SeatHoldService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class BookingController {
 
     private final SeatHoldService seatHoldService;
+    private final PaymentService paymentService;
 
     /**
      * Public endpoint to get seat map with real-time AVAILABLE / HOLD / BOOKED status
@@ -71,6 +76,25 @@ public class BookingController {
                 .statusCode(HttpStatus.OK.value())
                 .message("Hủy giữ ghế thành công")
                 .data(null)
+                .build());
+    }
+
+    /**
+     * Authenticated endpoint to initiate online VNPAY checkout with 10-minute hold extension
+     */
+    @PostMapping("/bookings/checkout-online")
+    public ResponseEntity<ApiResponse<OnlineCheckoutResponse>> checkoutOnline(
+            @AuthenticationPrincipal UserPrincipal currentUser,
+            @Valid @RequestBody OnlineCheckoutRequest request,
+            HttpServletRequest httpRequest
+    ) {
+        Long userId = currentUser != null ? currentUser.getId() : null;
+        OnlineCheckoutResponse response = paymentService.createOnlineCheckout(userId, request, httpRequest);
+        return ResponseEntity.ok(ApiResponse.<OnlineCheckoutResponse>builder()
+                .success(true)
+                .statusCode(HttpStatus.OK.value())
+                .message("Tạo giao dịch thanh toán VNPAY thành công")
+                .data(response)
                 .build());
     }
 }
