@@ -2,5 +2,6 @@ package com.cineplex.entity.enums;
 
 public enum PaymentMethod {
     VNPAY,
-    CASH
+    CASH,
+    BANK_TRANSFER
 }

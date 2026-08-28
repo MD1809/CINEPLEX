@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Optional<Ticket> findByTicketCode(String ticketCode);
     Optional<Ticket> findByQrCodeToken(String qrCodeToken);
+    Optional<Ticket> findByQrCodeTokenOrTicketCode(String qrCodeToken, String ticketCode);
     List<Ticket> findByBookingId(Long bookingId);
     boolean existsByBookingIdAndSeatId(Long bookingId, Long seatId);
 

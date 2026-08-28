@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Long> {
+    List<Seat> findByRoomId(Long roomId);
     List<Seat> findByRoomIdOrderByRowCodeAscColNumberAsc(Long roomId);
     Optional<Seat> findByRoomIdAndSeatCode(Long roomId, String seatCode);
 }
