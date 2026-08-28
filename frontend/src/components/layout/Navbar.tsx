@@ -77,9 +77,6 @@ export const Navbar: React.FC = () => {
                   </div>
                   <div className="text-left hidden sm:block">
                     <p className="text-xs font-semibold text-white leading-none">{user.fullName}</p>
-                    <span className="text-[10px] font-medium text-cine-gold uppercase">
-                      {user.role}
-                    </span>
                   </div>
                   <ChevronDown className="w-4 h-4 text-slate-400" />
                 </button>

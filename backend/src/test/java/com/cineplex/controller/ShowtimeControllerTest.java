@@ -78,8 +78,9 @@ class ShowtimeControllerTest {
 
         String token = jwtTokenProvider.generateAccessToken(admin);
 
-        // Schedule far in future (30 days from now) to guarantee no conflict
-        LocalDateTime futureStart = LocalDate.now().plusDays(30).atTime(10, 0);
+        // Schedule far in future with dynamic offset to guarantee idempotency across multiple test runs
+        long dayOffset = 50 + (System.currentTimeMillis() % 10000);
+        LocalDateTime futureStart = LocalDate.now().plusDays(dayOffset).atTime(10, 0);
 
         ShowtimeCreateRequest request = ShowtimeCreateRequest.builder()
                 .movieId(1L)

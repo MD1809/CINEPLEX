@@ -48,6 +48,47 @@
   }
 }
 
+@layer utilities {
+  .bg-cine-dark {
+    background-color: #121317;
+  }
+  .bg-cine-surface {
+    background-color: #1e1f23;
+  }
+  .bg-cine-surface-elevated {
+    background-color: #292a2e;
+  }
+  .bg-cine-red {
+    background-color: #e50914;
+  }
+  .text-cine-red {
+    color: #e50914;
+  }
+  .border-cine-red {
+    border-color: #e50914;
+  }
+
+  /* Stitch Design Tokens & Glow Effects */
+  .glass-panel {
+    background: rgba(18, 19, 23, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .glow-primary {
+    box-shadow: 0 0 24px rgba(229, 9, 20, 0.45);
+  }
+  .glow-primary-lg {
+    box-shadow: 0 0 35px rgba(229, 9, 20, 0.6);
+  }
+  .text-glow {
+    text-shadow: 0 0 16px rgba(229, 9, 20, 0.6);
+  }
+  .btn-glow:hover {
+    box-shadow: 0 0 20px rgba(229, 9, 20, 0.55);
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
