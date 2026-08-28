@@ -53,7 +53,8 @@ export interface PosTransferResponse {
 }
 
 export interface TicketCheckInRequest {
-  qrCodeTokenOrTicketCode: string;
+  tokenOrCode?: string;
+  qrCodeTokenOrTicketCode?: string;
 }
 
 export interface TicketCheckInResponse {
@@ -61,9 +62,13 @@ export interface TicketCheckInResponse {
   message: string;
   ticketCode?: string;
   movieTitle?: string;
+  moviePosterUrl?: string;
   roomName?: string;
   screenType?: string;
+  startTime?: string;
   showtimeStart?: string;
+  endTime?: string;
+  showtimeEnd?: string;
   seatCode?: string;
   seatType?: string;
   customerName?: string;

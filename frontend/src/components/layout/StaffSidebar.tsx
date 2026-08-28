@@ -82,6 +82,54 @@ export const StaffSidebar: React.FC = () => {
           </div>
         </div>
 
+        {/* Navigation Links */}
+        <nav className="space-y-1.5 pt-1">
+          <div className="px-2 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            Nghiệp Vụ Quầy
+          </div>
+
+          {navLinks.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `group flex items-center gap-3 px-3.5 py-3 rounded-2xl transition-all duration-200 ${isActive
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-lg shadow-amber-500/20 scale-[1.02]'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80 font-bold border border-transparent hover:border-slate-800'
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <div
+                      className={`p-2 rounded-xl transition-colors ${isActive
+                          ? 'bg-slate-950/20 text-slate-950'
+                          : 'bg-slate-800/60 text-slate-400 group-hover:text-amber-400 group-hover:bg-slate-800'
+                        }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 text-left min-w-0">
+                      <p className="text-xs leading-tight truncate">{item.label}</p>
+                      <p
+                        className={`text-[10px] font-medium truncate mt-0.5 ${isActive ? 'text-slate-900/80' : 'text-slate-400'
+                          }`}
+                      >
+                        {item.description}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </NavLink>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Bottom Section: Clock & Logout */}
+      <div className="space-y-3 pt-3 border-t border-slate-800/80">
         {/* Staff Profile Card */}
         <div className="p-3.5 bg-gradient-to-b from-[#161b22] to-[#12161c] rounded-2xl border border-slate-800/90 shadow-sm flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/40 flex items-center justify-center font-black text-amber-400 text-sm shadow-inner">
@@ -99,58 +147,6 @@ export const StaffSidebar: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* Navigation Links */}
-        <nav className="space-y-1.5 pt-1">
-          <div className="px-2 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            Nghiệp Vụ Quầy
-          </div>
-
-          {navLinks.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `group flex items-center gap-3 px-3.5 py-3 rounded-2xl transition-all duration-200 ${
-                    isActive
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-lg shadow-amber-500/20 scale-[1.02]'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/80 font-bold border border-transparent hover:border-slate-800'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <div
-                      className={`p-2 rounded-xl transition-colors ${
-                        isActive
-                          ? 'bg-slate-950/20 text-slate-950'
-                          : 'bg-slate-800/60 text-slate-400 group-hover:text-amber-400 group-hover:bg-slate-800'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="flex-1 text-left min-w-0">
-                      <p className="text-xs leading-tight truncate">{item.label}</p>
-                      <p
-                        className={`text-[10px] font-medium truncate mt-0.5 ${
-                          isActive ? 'text-slate-900/80' : 'text-slate-400'
-                        }`}
-                      >
-                        {item.description}
-                      </p>
-                    </div>
-                  </>
-                )}
-              </NavLink>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* Bottom Section: Clock & Logout */}
-      <div className="space-y-3 pt-3 border-t border-slate-800/80">
         {/* Live Clock Card */}
         <div className="p-3 bg-gradient-to-b from-[#161b22] to-[#0f141a] rounded-2xl border border-slate-800/80 text-center space-y-0.5 shadow-inner">
           <div className="flex items-center justify-center gap-2 text-sm font-mono font-black text-amber-400 tracking-wider">

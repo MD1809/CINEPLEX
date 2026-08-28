@@ -288,11 +288,6 @@ export const PosDashboardPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
           <h2 className="text-sm font-extrabold text-white">Quầy Thu Ngân Bán Vé & Bắp Nước</h2>
-          {selectedShowtime && (
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-bold border border-amber-500/30">
-              {selectedShowtime.movie.title} • {selectedShowtime.room.name}
-            </span>
-          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -325,11 +320,10 @@ export const PosDashboardPage: React.FC = () => {
           <div className="flex items-center bg-[#161b22] p-1 rounded-2xl border border-slate-800 gap-1.5 shrink-0">
             <button
               onClick={() => setCenterTab('SEATS')}
-              className={`flex-1 py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                centerTab === 'SEATS'
+              className={`flex-1 py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${centerTab === 'SEATS'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
-              }`}
+                }`}
             >
               <Armchair className="w-4 h-4" />
               <span>Sơ Đồ Ghế ({selectedSeats.length})</span>
@@ -337,11 +331,10 @@ export const PosDashboardPage: React.FC = () => {
 
             <button
               onClick={() => setCenterTab('SNACKS')}
-              className={`flex-1 py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                centerTab === 'SNACKS'
+              className={`flex-1 py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${centerTab === 'SNACKS'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
-              }`}
+                }`}
             >
               <Popcorn className="w-4 h-4" />
               <span>
@@ -515,11 +508,10 @@ export const PosDashboardPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setPaymentMethod('CASH')}
-                className={`py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                  paymentMethod === 'CASH'
+                className={`py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${paymentMethod === 'CASH'
                     ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
                     : 'text-slate-400 hover:text-white'
-                }`}
+                  }`}
               >
                 <Banknote className="w-3.5 h-3.5" />
                 <span>Tiền Mặt (Cash)</span>
@@ -528,11 +520,10 @@ export const PosDashboardPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setPaymentMethod('BANK_TRANSFER')}
-                className={`py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                  paymentMethod === 'BANK_TRANSFER'
+                className={`py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${paymentMethod === 'BANK_TRANSFER'
                     ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
                     : 'text-slate-400 hover:text-white'
-                }`}
+                  }`}
               >
                 <QrCode className="w-3.5 h-3.5" />
                 <span>Chuyển Khoản QR</span>
@@ -551,11 +542,10 @@ export const PosDashboardPage: React.FC = () => {
                 <button
                   disabled={selectedSeats.length === 0 || isProcessingCheckout || finalAmount <= 0}
                   onClick={handleCreateTransferQr}
-                  className={`w-full py-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 shadow-xl transition-all active:scale-98 cursor-pointer ${
-                    selectedSeats.length > 0 && !isProcessingCheckout && finalAmount > 0
+                  className={`w-full py-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 shadow-xl transition-all active:scale-98 cursor-pointer ${selectedSeats.length > 0 && !isProcessingCheckout && finalAmount > 0
                       ? 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-slate-950 shadow-cyan-500/20'
                       : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                  }`}
+                    }`}
                 >
                   {isProcessingCheckout ? (
                     <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />

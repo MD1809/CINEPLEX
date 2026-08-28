@@ -12,6 +12,7 @@ import { PaymentResultPage } from './pages/PaymentResultPage';
 import { MyTicketsPage } from './pages/MyTicketsPage';
 import { PosDashboardPage } from './pages/staff/PosDashboardPage';
 import { ShiftHistoryPage } from './pages/staff/ShiftHistoryPage';
+import { ScannerDashboardPage } from './pages/staff/ScannerDashboardPage';
 import { AuthRequiredDialog } from './components/auth/AuthRequiredDialog';
 import { ProtectedRoute } from './components/guards/ProtectedRoute';
 import { Toaster } from 'sonner';
@@ -94,17 +95,7 @@ export function App() {
         >
           <Route path="/staff/pos" element={<PosDashboardPage />} />
           <Route path="/staff/shifts" element={<ShiftHistoryPage />} />
-          <Route
-            path="/staff/scanner"
-            element={
-              <div className="max-w-4xl mx-auto py-16 px-4 text-center space-y-4">
-                <h1 className="text-3xl font-bold text-white">Camera Quét Mã QR Soát Vé</h1>
-                <p className="text-slate-400">
-                  Giao diện Camera QR Scanner sẽ được triển khai trong Task 6.3.
-                </p>
-              </div>
-            }
-          />
+          <Route path="/staff/scanner" element={<ScannerDashboardPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
