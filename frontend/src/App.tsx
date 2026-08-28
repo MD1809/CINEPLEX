@@ -6,6 +6,7 @@ import { MovieDetailPage } from './pages/MovieDetailPage';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { SeatSelectionPage } from './pages/SeatSelectionPage';
+import { ConcessionsPage } from './pages/ConcessionsPage';
 import { AuthRequiredDialog } from './components/auth/AuthRequiredDialog';
 import { ProtectedRoute } from './components/guards/ProtectedRoute';
 import { Toaster } from 'sonner';
@@ -33,6 +34,14 @@ export function App() {
               element={
                 <ProtectedRoute allowedRoles={['CUSTOMER', 'STAFF', 'ADMIN']}>
                   <SeatSelectionPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/booking/concessions"
+              element={
+                <ProtectedRoute allowedRoles={['CUSTOMER', 'STAFF', 'ADMIN']}>
+                  <ConcessionsPage />
                 </ProtectedRoute>
               }
             />
