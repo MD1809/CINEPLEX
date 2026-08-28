@@ -17,6 +17,7 @@ import com.cineplex.exception.BadRequestException;
 import com.cineplex.exception.ConflictException;
 import com.cineplex.exception.ResourceNotFoundException;
 import com.cineplex.repository.*;
+import com.cineplex.service.EmailNotificationService;
 import com.cineplex.service.PaymentService;
 import com.cineplex.service.SeatHoldService;
 import com.cineplex.service.VoucherService;
@@ -40,6 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final VnpayConfig vnpayConfig;
     private final SeatHoldService seatHoldService;
     private final VoucherService voucherService;
+    private final EmailNotificationService emailNotificationService;
     private final BookingRepository bookingRepository;
     private final TicketRepository ticketRepository;
     private final BookingSnackRepository bookingSnackRepository;
@@ -287,6 +289,13 @@ public class PaymentServiceImpl implements PaymentService {
             for (Ticket t : tickets) {
                 String key = "seat_hold:" + booking.getShowtime().getId() + ":" + t.getSeat().getId();
                 redisTemplate.delete(key);
+            }
+
+            // Trigger Async Email Notification with ZXing QR Codes
+            try {
+                emailNotificationService.sendBookingConfirmationEmail(booking.getId());
+            } catch (Exception e) {
+                log.error("Failed to trigger booking confirmation email: {}", e.getMessage());
             }
 
             log.info("Successfully confirmed booking {} and finalized payment {}", bookingCode, payment != null ? payment.getId() : null);
