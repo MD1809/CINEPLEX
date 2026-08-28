@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { MovieDetailPage } from './pages/MovieDetailPage';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
+import { SeatSelectionPage } from './pages/SeatSelectionPage';
 import { AuthRequiredDialog } from './components/auth/AuthRequiredDialog';
 import { ProtectedRoute } from './components/guards/ProtectedRoute';
 import { Toaster } from 'sonner';
@@ -26,17 +27,12 @@ export function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
-            {/* Booking Flow (Phase 4 Protected / Semi-protected) */}
+            {/* Booking Flow (Phase 4 Protected) */}
             <Route
               path="/booking/seats"
               element={
                 <ProtectedRoute allowedRoles={['CUSTOMER', 'STAFF', 'ADMIN']}>
-                  <div className="max-w-4xl mx-auto py-16 px-4 text-center space-y-4">
-                    <h1 className="text-3xl font-bold text-white">Sơ Đồ Ghế & Khóa Ghế Redis 5 Phút</h1>
-                    <p className="text-slate-400">
-                      Tính năng chọn ghế tương tác thời gian thực sẽ được hoàn thiện trong Giai đoạn 4.
-                    </p>
-                  </div>
+                  <SeatSelectionPage />
                 </ProtectedRoute>
               }
             />
