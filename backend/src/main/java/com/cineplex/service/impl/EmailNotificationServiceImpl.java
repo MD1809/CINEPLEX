@@ -85,6 +85,60 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
         }
     }
 
+    @Override
+    @Async
+    public void sendPasswordResetEmail(String toEmail, String recipientName) {
+        log.info("Sending password reset email to {}", toEmail);
+        try {
+            String name = (recipientName != null && !recipientName.trim().isEmpty()) ? recipientName : "Quý khách";
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(fromEmail, "CINEPLEX Cinema");
+            helper.setTo(toEmail);
+            helper.setSubject("🔐 [CINEPLEX] Yêu cầu đặt lại mật khẩu tài khoản");
+
+            String html = String.format("""
+                <!DOCTYPE html>
+                <html>
+                <head><meta charset="utf-8" /></head>
+                <body style="margin: 0; padding: 20px; background-color: #0f1015; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #e2e8f0;">
+                    <div style="max-width: 550px; margin: 0 auto; background: #121317; border-radius: 16px; overflow: hidden; border: 1px solid #222;">
+                        <div style="background: linear-gradient(135deg, #e50914 0%%, #b80710 100%%); padding: 20px; text-align: center; color: #fff;">
+                            <h1 style="margin: 0; font-size: 22px; font-weight: 900; letter-spacing: 2px;">CINEPLEX CINEMAS</h1>
+                            <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.9;">Yêu Cầu Thiết Lập Lại Mật Khẩu</p>
+                        </div>
+                        <div style="padding: 24px;">
+                            <p style="font-size: 14px;">Xin chào <strong>%s</strong>,</p>
+                            <p style="font-size: 13px; color: #aaa; line-height: 1.6;">
+                                Ban Quản trị hệ thống CINEPLEX đã gửi cho bạn yêu cầu đặt lại mật khẩu cho tài khoản <strong>%s</strong>.
+                            </p>
+                            <div style="background: #18191e; border: 1px solid #282930; border-radius: 12px; padding: 16px; margin: 20px 0; text-align: center;">
+                                <p style="font-size: 12px; color: #888; margin-top: 0;">Vui lòng truy cập trang đăng nhập để cập nhật mật khẩu mới của bạn:</p>
+                                <a href="http://localhost:5173/login" style="display: inline-block; background: #f59e0b; color: #0f172a; font-weight: bold; font-size: 13px; text-decoration: none; padding: 10px 24px; border-radius: 8px; margin-top: 6px;">
+                                    Đến Trang Đăng Nhập CINEPLEX
+                                </a>
+                            </div>
+                            <p style="font-size: 11px; color: #777; line-height: 1.5;">
+                                * Nếu bạn không yêu cầu hành động này, vui lòng bỏ qua email hoặc liên hệ với bộ phận hỗ trợ khách hàng của CINEPLEX.
+                            </p>
+                        </div>
+                        <div style="background: #0b0c0e; padding: 12px; text-align: center; font-size: 11px; color: #555; border-top: 1px solid #1a1b20;">
+                            © 2026 CINEPLEX Vietnam. All rights reserved.
+                        </div>
+                    </div>
+                </body>
+                </html>
+            """, name, toEmail);
+
+            helper.setText(html, true);
+            mailSender.send(message);
+            log.info("Successfully sent password reset email to {}", toEmail);
+        } catch (Exception ex) {
+            log.error("Failed to send password reset email to {}: {}", toEmail, ex.getMessage());
+        }
+    }
+
     private String buildHtmlEmailContent(Booking booking, List<Ticket> tickets, List<BookingSnack> snacks, String recipientName) {
         Showtime showtime = booking.getShowtime();
         Movie movie = showtime.getMovie();
