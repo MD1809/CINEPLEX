@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CustomerLayout } from './components/layout/CustomerLayout';
 import { StaffLayout } from './components/layout/StaffLayout';
+import { AdminLayout } from './components/layout/AdminLayout';
 import { HomePage } from './pages/HomePage';
 import { MovieDetailPage } from './pages/MovieDetailPage';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -68,21 +69,6 @@ export function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Admin Protected Routes */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['ADMIN']}>
-                <div className="max-w-4xl mx-auto py-16 px-4 text-center space-y-4">
-                  <h1 className="text-3xl font-bold text-white">Bảng Điều Khiển Quản Trị Viên (Admin CMS)</h1>
-                  <p className="text-slate-400">
-                    Tính năng báo cáo doanh thu & quản lý rạp sẽ được hoàn thiện trong Giai đoạn 7.
-                  </p>
-                </div>
-              </ProtectedRoute>
-            }
-          />
         </Route>
 
         {/* Staff Operations Portal (Dedicated Left Sidebar, No Customer Nav/Footer) */}
@@ -97,8 +83,90 @@ export function App() {
           <Route path="/staff/shifts" element={<ShiftHistoryPage />} />
           <Route path="/staff/scanner" element={<ScannerDashboardPage />} />
         </Route>
+
+        {/* Admin Management Portal (Dedicated Left Sidebar, Dark Noir & Gold Accent) */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/admin" element={<AdminDashboardPlaceholder />} />
+          <Route path="/admin/dashboard" element={<AdminDashboardPlaceholder />} />
+          <Route path="/admin/movies" element={<AdminMoviesPlaceholder />} />
+          <Route path="/admin/rooms" element={<AdminRoomsPlaceholder />} />
+          <Route path="/admin/showtimes" element={<AdminShowtimesPlaceholder />} />
+          <Route path="/admin/concessions" element={<AdminConcessionsPlaceholder />} />
+          <Route path="/admin/vouchers" element={<AdminVouchersPlaceholder />} />
+          <Route path="/admin/users" element={<AdminUsersPlaceholder />} />
+        </Route>
       </Routes>
     </BrowserRouter>
+  );
+}
+
+// Temporary placeholders for subsequent tasks in Phase 7
+function AdminDashboardPlaceholder() {
+  return (
+    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
+      <h2 className="text-xl font-black text-amber-400">📊 Tổng Quan Doanh Thu & KPIs</h2>
+      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.2 (Recharts & Analytics APIs).</p>
+    </div>
+  );
+}
+
+function AdminMoviesPlaceholder() {
+  return (
+    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
+      <h2 className="text-xl font-black text-amber-400">🎬 Quản Lý Danh Mục Phim</h2>
+      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.3.</p>
+    </div>
+  );
+}
+
+function AdminRoomsPlaceholder() {
+  return (
+    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
+      <h2 className="text-xl font-black text-amber-400">🏛️ Quản Lý Phòng Chiếu & Ma Trận Ghế</h2>
+      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.4 (SeatMatrixBuilder).</p>
+    </div>
+  );
+}
+
+function AdminShowtimesPlaceholder() {
+  return (
+    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
+      <h2 className="text-xl font-black text-amber-400">📅 Xếp Lịch Chiếu Suất Phim</h2>
+      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.5 (Timeline Scheduler chống trùng 15p).</p>
+    </div>
+  );
+}
+
+function AdminConcessionsPlaceholder() {
+  return (
+    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
+      <h2 className="text-xl font-black text-amber-400">🍿 Quản Lý Bắp Nước & F&B</h2>
+      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.6.</p>
+    </div>
+  );
+}
+
+function AdminVouchersPlaceholder() {
+  return (
+    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
+      <h2 className="text-xl font-black text-amber-400">🏷️ Quản Lý Khuyến Mãi & Mã Giảm Giá</h2>
+      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.7.</p>
+    </div>
+  );
+}
+
+function AdminUsersPlaceholder() {
+  return (
+    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
+      <h2 className="text-xl font-black text-amber-400">👥 Quản Lý Tài Khoản & Nhân Viên</h2>
+      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.8.</p>
+    </div>
   );
 }
 
