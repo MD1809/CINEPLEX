@@ -7,6 +7,7 @@ import { AdminMoviesPage } from './pages/admin/AdminMoviesPage';
 import { AdminRoomsPage } from './pages/admin/AdminRoomsPage';
 import { AdminShowtimesPage } from './pages/admin/AdminShowtimesPage';
 import { AdminConcessionsPage } from './pages/admin/AdminConcessionsPage';
+import { AdminVouchersPage } from './pages/admin/AdminVouchersPage';
 import { HomePage } from './pages/HomePage';
 import { MovieDetailPage } from './pages/MovieDetailPage';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -103,7 +104,7 @@ export function App() {
           <Route path="/admin/rooms" element={<AdminRoomsPage />} />
           <Route path="/admin/showtimes" element={<AdminShowtimesPage />} />
           <Route path="/admin/concessions" element={<AdminConcessionsPage />} />
-          <Route path="/admin/vouchers" element={<AdminVouchersPlaceholder />} />
+          <Route path="/admin/vouchers" element={<AdminVouchersPage />} />
           <Route path="/admin/users" element={<AdminUsersPlaceholder />} />
         </Route>
       </Routes>
@@ -112,15 +113,6 @@ export function App() {
 }
 
 // Temporary placeholders for subsequent tasks in Phase 7
-function AdminVouchersPlaceholder() {
-  return (
-    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
-      <h2 className="text-xl font-black text-amber-400">🏷️ Quản Lý Khuyến Mãi & Mã Giảm Giá</h2>
-      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.7.</p>
-    </div>
-  );
-}
-
 function AdminUsersPlaceholder() {
   return (
     <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
