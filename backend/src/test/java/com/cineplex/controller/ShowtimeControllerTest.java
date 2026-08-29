@@ -123,4 +123,50 @@ class ShowtimeControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    @DisplayName("POST /api/v1/admin/showtimes - Reject overlapping showtime within 15-min buffer")
+    void testCreateShowtimeCollisionRejection() throws Exception {
+        UserPrincipal admin = UserPrincipal.builder()
+                .id(1L)
+                .email("admin@cineplex.vn")
+                .fullName("Quản Trị Viên")
+                .role(Role.ADMIN)
+                .build();
+
+        String token = jwtTokenProvider.generateAccessToken(admin);
+
+        long uniqueDayOffset = 80 + (System.currentTimeMillis() % 5000);
+        LocalDateTime baseTime = LocalDate.now().plusDays(uniqueDayOffset).atTime(14, 0);
+
+        // First showtime: 14:00 (movie duration 120m -> ends 16:00, buffer until 16:15)
+        ShowtimeCreateRequest req1 = ShowtimeCreateRequest.builder()
+                .movieId(1L)
+                .roomId(1L)
+                .startTime(baseTime)
+                .basePrice(new BigDecimal("100000.00"))
+                .build();
+
+        mockMvc.perform(post("/api/v1/admin/showtimes")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req1)))
+                .andExpect(status().isCreated());
+
+        // Overlapping candidate: 15:30 (during 1st showtime)
+        ShowtimeCreateRequest req2 = ShowtimeCreateRequest.builder()
+                .movieId(1L)
+                .roomId(1L)
+                .startTime(baseTime.plusMinutes(90))
+                .basePrice(new BigDecimal("100000.00"))
+                .build();
+
+        mockMvc.perform(post("/api/v1/admin/showtimes")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req2)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success", is(false)))
+                .andExpect(jsonPath("$.message", containsString("Xung đột lịch chiếu")));
+    }
 }

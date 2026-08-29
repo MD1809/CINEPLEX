@@ -60,6 +60,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         }
 
         return showtimes.stream()
+                .filter(s -> s.getStatus() != ShowtimeStatus.CANCELLED)
                 .sorted(Comparator.comparing(Showtime::getStartTime))
                 .map(ShowtimeResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -170,9 +171,14 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         Showtime showtime = showtimeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Suất chiếu", "id", id));
 
-        showtime.setStatus(ShowtimeStatus.CANCELLED);
-        showtimeRepository.save(showtime);
-        log.info("Cancelled showtime ID: {}", id);
+        try {
+            showtimeRepository.delete(showtime);
+            log.info("Permanently deleted showtime ID: {}", id);
+        } catch (Exception e) {
+            log.warn("Cannot delete showtime ID {} directly, setting status to CANCELLED: {}", id, e.getMessage());
+            showtime.setStatus(ShowtimeStatus.CANCELLED);
+            showtimeRepository.save(showtime);
+        }
     }
 
     /**
