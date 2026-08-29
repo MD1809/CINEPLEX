@@ -1,5 +1,5 @@
 export type ScreenType = 'STANDARD_2D' | 'THREE_D' | 'IMAX' | 'FOUR_DX';
-export type RoomStatus = 'ACTIVE' | 'MAINTENANCE' | 'CLOSED';
+export type RoomStatus = 'ACTIVE' | 'MAINTENANCE' | 'INACTIVE' | 'CLOSED';
 
 export interface SeatType {
   id: number;

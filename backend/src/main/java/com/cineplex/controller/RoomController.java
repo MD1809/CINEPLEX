@@ -51,6 +51,44 @@ public class RoomController {
         return ResponseEntity.ok(ApiResponse.ok("Lấy danh sách loại ghế thành công.", seatTypes));
     }
 
+    @PostMapping("/api/v1/admin/rooms")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Tạo phòng chiếu mới và sinh ma trận ghế mặc định (Admin)")
+    public ResponseEntity<ApiResponse<RoomResponse>> createRoom(
+            @Valid @RequestBody com.cineplex.dto.admin.RoomCreateUpdateRequest request) {
+        RoomResponse response = roomService.createRoom(request);
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED)
+                .body(ApiResponse.created("Tạo phòng chiếu mới thành công.", response));
+    }
+
+    @PutMapping("/api/v1/admin/rooms/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Cập nhật thông tin phòng chiếu (Admin)")
+    public ResponseEntity<ApiResponse<RoomResponse>> updateRoom(
+            @PathVariable Long id,
+            @Valid @RequestBody com.cineplex.dto.admin.RoomCreateUpdateRequest request) {
+        RoomResponse response = roomService.updateRoom(id, request);
+        return ResponseEntity.ok(ApiResponse.ok("Cập nhật phòng chiếu thành công.", response));
+    }
+
+    @PatchMapping("/api/v1/admin/rooms/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Cập nhật trạng thái phòng chiếu (Admin)")
+    public ResponseEntity<ApiResponse<RoomResponse>> updateRoomStatus(
+            @PathVariable Long id,
+            @RequestParam com.cineplex.entity.enums.RoomStatus status) {
+        RoomResponse response = roomService.updateRoomStatus(id, status);
+        return ResponseEntity.ok(ApiResponse.ok("Cập nhật trạng thái phòng chiếu thành công.", response));
+    }
+
+    @DeleteMapping("/api/v1/admin/rooms/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Xóa phòng chiếu khỏi hệ thống (Admin)")
+    public ResponseEntity<ApiResponse<Void>> deleteRoom(@PathVariable Long id) {
+        roomService.deleteRoom(id);
+        return ResponseEntity.ok(ApiResponse.ok("Xóa phòng chiếu thành công.", null));
+    }
+
     @PutMapping("/api/v1/admin/rooms/{id}/seats")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Cập nhật loại ghế / trạng thái ghế hàng loạt (Admin Interactive Seat Painter)")
