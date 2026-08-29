@@ -17,4 +17,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
     List<Booking> findByStaffIdOrderByCreatedAtDesc(Long staffId);
     List<Booking> findByStaffIdAndCreatedAtBetween(Long staffId, LocalDateTime start, LocalDateTime end);
     List<Booking> findByStatus(BookingStatus status);
+    List<Booking> findByStatusAndCreatedAtBetween(BookingStatus status, LocalDateTime start, LocalDateTime end);
+    List<Booking> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }
