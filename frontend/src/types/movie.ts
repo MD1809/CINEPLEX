@@ -1,6 +1,6 @@
 export type AgeRating = 'P' | 'T13' | 'T16' | 'T18';
 
-export type MovieStatus = 'NOW_SHOWING' | 'COMING_SOON' | 'END_SHOWING';
+export type MovieStatus = 'NOW_SHOWING' | 'COMING_SOON' | 'ENDED' | 'END_SHOWING';
 
 export interface Genre {
   id: number;

@@ -70,6 +70,16 @@ public class MovieController {
         return ResponseEntity.ok(ApiResponse.ok("Cập nhật phim thành công.", response));
     }
 
+    @PatchMapping("/api/v1/admin/movies/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Thay đổi trạng thái phim (Admin)")
+    public ResponseEntity<ApiResponse<MovieResponse>> updateMovieStatus(
+            @PathVariable Long id,
+            @RequestParam com.cineplex.entity.enums.MovieStatus status) {
+        MovieResponse response = movieService.updateMovieStatus(id, status);
+        return ResponseEntity.ok(ApiResponse.ok("Cập nhật trạng thái phim thành công.", response));
+    }
+
     @DeleteMapping("/api/v1/admin/movies/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Xóa phim khỏi hệ thống (Admin)")

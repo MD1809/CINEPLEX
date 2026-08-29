@@ -3,6 +3,7 @@ import { CustomerLayout } from './components/layout/CustomerLayout';
 import { StaffLayout } from './components/layout/StaffLayout';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
+import { AdminMoviesPage } from './pages/admin/AdminMoviesPage';
 import { HomePage } from './pages/HomePage';
 import { MovieDetailPage } from './pages/MovieDetailPage';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -95,7 +96,7 @@ export function App() {
         >
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-          <Route path="/admin/movies" element={<AdminMoviesPlaceholder />} />
+          <Route path="/admin/movies" element={<AdminMoviesPage />} />
           <Route path="/admin/rooms" element={<AdminRoomsPlaceholder />} />
           <Route path="/admin/showtimes" element={<AdminShowtimesPlaceholder />} />
           <Route path="/admin/concessions" element={<AdminConcessionsPlaceholder />} />
@@ -108,15 +109,6 @@ export function App() {
 }
 
 // Temporary placeholders for subsequent tasks in Phase 7
-function AdminMoviesPlaceholder() {
-  return (
-    <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">
-      <h2 className="text-xl font-black text-amber-400">🎬 Quản Lý Danh Mục Phim</h2>
-      <p className="text-sm text-slate-400">Sẽ được triển khai chi tiết ở Task 7.3.</p>
-    </div>
-  );
-}
-
 function AdminRoomsPlaceholder() {
   return (
     <div className="p-8 rounded-3xl bg-[#0e121a] border border-slate-800 text-center space-y-3">

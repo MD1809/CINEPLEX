@@ -22,5 +22,7 @@ public interface MovieService {
 
     MovieResponse updateMovie(Long id, MovieUpdateRequest request);
 
+    MovieResponse updateMovieStatus(Long id, com.cineplex.entity.enums.MovieStatus status);
+
     void deleteMovie(Long id);
 }

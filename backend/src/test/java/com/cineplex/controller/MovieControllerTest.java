@@ -121,4 +121,24 @@ class MovieControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    @DisplayName("PATCH /api/v1/admin/movies/{id}/status - Admin updates movie status successfully")
+    void testUpdateMovieStatusAsAdmin() throws Exception {
+        UserPrincipal admin = UserPrincipal.builder()
+                .id(1L)
+                .email("admin@cineplex.vn")
+                .fullName("Quản Trị Viên")
+                .role(Role.ADMIN)
+                .build();
+
+        String token = jwtTokenProvider.generateAccessToken(admin);
+
+        mockMvc.perform(patch("/api/v1/admin/movies/1/status")
+                        .param("status", "NOW_SHOWING")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data.status", is("NOW_SHOWING")));
+    }
 }

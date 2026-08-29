@@ -142,6 +142,18 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional
+    public MovieResponse updateMovieStatus(Long id, com.cineplex.entity.enums.MovieStatus status) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Phim", "id", id));
+
+        movie.setStatus(status);
+        Movie updatedMovie = movieRepository.save(movie);
+        log.info("Updated status for movie ID {}: {}", id, status);
+        return MovieResponse.fromEntity(updatedMovie);
+    }
+
+    @Override
+    @Transactional
     public void deleteMovie(Long id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Phim", "id", id));
